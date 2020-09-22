@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   f.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahmansou <ahmansou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahmansou <ahmansou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 15:36:29 by ahmansou          #+#    #+#             */
-/*   Updated: 2020/03/13 16:59:35 by ahmansou         ###   ########.fr       */
+/*   Updated: 2020/09/22 18:59:05 by ahmansou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		check_files(char **av)
 			count++;
 		i++;
 	}
+	ft_printf("count : %d\n", count);
 	return (count);
 }
 
@@ -117,11 +118,16 @@ int		get_other_args(char **av, char ***args, int *dump, int ac)
 	dump_found = 0;
 	while (av[++i] && i < ac)
 	{
-		i += (av[i] && !ft_strcmp(av[i], "-n")) ? 3 : 0;
+		// ft_printf("av[%d] %s is_cor_file: %d\n", i, av[i], is_cor_file(av[i]));
+		while (av[i] && !ft_strcmp(av[i], "-n"))
+			i += 3;
+		// i += (av[i] && !ft_strcmp(av[i], "-n")) ? 3 : 0;
 		if (av[i] && !ft_strcmp(av[i], "-dump"))
 			if (((*dump) = get_dump(av, &i, dump, &dump_found)) < 0)
 				return (-3);
-		i += (av[i] && !ft_strcmp(av[i], "-n")) ? 3 : 0;
+		// ft_printf("av[%d] %s is_cor_file: %d\n", i, av[i], is_cor_file(av[i]));
+		// i += (av[i] && !ft_strcmp(av[i], "-n")) ? 3 : 0;
+		// ft_printf("av[%d] %s is_cor_file: %d\n", i, av[i], is_cor_file(av[i]));
 		if (av[i] && !is_cor_file(av[i]))
 			return (-4);
 		if (av[i] && (j = -1))
@@ -176,8 +182,14 @@ int		get_args(int ac, char **av, char ***args, int *dump)
 	int		err;
 	int		i;
 
+	// i = 0;
+	// while (av[i])
+	// 	ft_printf("%s\n", av[i++]);
+
+	// ft_printf("--------------------\n");
 	if (ac > 1 && check_files(av) <= 4 && check_files(av) > 0)
 	{
+		// ft_printf("OK\n");
 		if (!((*args) = ft_memalloc(sizeof(char*) * 4)))
 			return (0);
 		if ((err = get_n_args(av, args)) < 0)
