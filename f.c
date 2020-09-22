@@ -6,7 +6,7 @@
 /*   By: ahmansou <ahmansou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 15:36:29 by ahmansou          #+#    #+#             */
-/*   Updated: 2020/09/22 19:28:46 by ahmansou         ###   ########.fr       */
+/*   Updated: 2020/09/22 19:43:28 by ahmansou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,12 @@ int		get_other_args(char **av, char ***args, int *dump, int ac)
 	int dump_found;
 
 	i = 0;
-	dump_found = 0;
+	// dump_found = 0;
 	while (av[++i] && i < ac)
 	{
 		while (av[i] && !ft_strcmp(av[i], "-n"))
 			i += 3;
-		if (av[i] && !ft_strcmp(av[i], "-dump"))
+		if (!(dump_found = 0) && av[i] && !ft_strcmp(av[i], "-dump"))
 			if (((*dump) = get_dump(av, &i, dump, &dump_found)) < 0)
 				return (-3);
 		while (av[i] && !ft_strcmp(av[i], "-n"))
@@ -194,7 +194,8 @@ int		get_args(int ac, char **av, char ***args, int *dump)
 			ft_printf("ERROR 1 %d\n", err);
 			return (return_err(args));
 		}
-		if ((err = get_other_args(av, args, dump, ac)) < 0 || check_dups(*args))
+		// if ((err = get_other_args(av, args, dump, ac)) < 0 || check_dups(*args))
+		if ((err = get_other_args(av, args, dump, ac)) < 0 )
 		{
 			ft_printf("ERROR 2 %d\n", err);
 			return (return_err(args));
