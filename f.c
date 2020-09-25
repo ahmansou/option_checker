@@ -6,7 +6,7 @@
 /*   By: ahmansou <ahmansou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/13 15:36:29 by ahmansou          #+#    #+#             */
-/*   Updated: 2020/09/22 19:43:28 by ahmansou         ###   ########.fr       */
+/*   Updated: 2020/09/25 14:28:09 by ahmansou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,16 +118,16 @@ int		get_other_args(char **av, char ***args, int *dump, int ac)
 	// dump_found = 0;
 	while (av[++i] && i < ac)
 	{
-		while (av[i] && !ft_strcmp(av[i], "-n"))
+		while (i < ac && av[i] && !ft_strcmp(av[i], "-n"))
 			i += 3;
-		if (!(dump_found = 0) && av[i] && !ft_strcmp(av[i], "-dump"))
+		if (i < ac && !(dump_found = 0) && av[i] && !ft_strcmp(av[i], "-dump"))
 			if (((*dump) = get_dump(av, &i, dump, &dump_found)) < 0)
 				return (-3);
-		while (av[i] && !ft_strcmp(av[i], "-n"))
+		while (i < ac && av[i] && !ft_strcmp(av[i], "-n"))
 			i += 3;
-		if (av[i] && !is_cor_file(av[i]))
+		if (i < ac && av[i] && !is_cor_file(av[i]))
 			return (-4);
-		if (av[i] && (j = -1))
+		if (i < ac && av[i] && (j = -1))
 			while (++j < 4)
 				if (!(*args)[j])
 				{
@@ -174,19 +174,19 @@ int		return_err(char ***args)
 	return (0);
 }
 
+int		has_vis(char **av, int ac) {
+
+	if (ft_strcmp(av[ac - 1], "-v"))
+		return (1);
+	return (0);
+}
+
 int		get_args(int ac, char **av, char ***args, int *dump)
 {
 	int		err;
-	int		i;
 
-	// i = 0;
-	// while (av[i])
-	// 	ft_printf("%s\n", av[i++]);
-
-	// ft_printf("--------------------\n");
 	if (ac > 1 && check_files(av) <= 4 && check_files(av) > 0)
 	{
-		// ft_printf("OK\n");
 		if (!((*args) = ft_memalloc(sizeof(char*) * 4)))
 			return (0);
 		if ((err = get_n_args(av, args)) < 0)
@@ -206,20 +206,35 @@ int		get_args(int ac, char **av, char ***args, int *dump)
 	return (1);
 }
 
+int		check_vis(int *ac, char **av)
+{
+	if (!ft_strcmp(av[(*ac) - 1], "-v"))
+	{
+		(*ac) -= 1;
+		return (1);
+	}
+	return (0);
+}
+
 int		main(int ac, char **av)
 {
 	char	**args;
 	int		err;
 	int		i;
 	int		dump;
+	int		has_vis;
 
+	has_vis = check_vis(&ac, av);
+
+	ft_printf("ac = %d\nvis = %d", ac, has_vis);
+	
 	if (get_args(ac, av, &args, &dump))
 	{
 		i = -1;
 		while (++i < 4)
 			if (args[i])
 				ft_printf("%d %s\n", i, args[i]);
-		ft_printf("dump = %d", dump);
+		ft_printf("dump = %d\nvis = %d", dump, has_vis);
 		free2d(&args);
 	}
 	else
